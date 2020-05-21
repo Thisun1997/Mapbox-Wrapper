@@ -1,20 +1,28 @@
 import React, { Component } from 'react';
 import './App.css';
 import Map from './Map';
+import MarkerMap from './MarkerMap';
 import Sidebar from './Sidebar';
 
 class App extends Component {
   render() {
     const accessToken =
-      'pk.eyJ1IjoianVsaWFubmVtYXJpayIsImEiOiJjam5sb280eHEwOWU3M3dueHR5ZThxNmw4In0.tdBsmI4y5XD-1FsLeVS_hQ';
-    const styleName = 'mapbox/light-v9';
-    const lon = -87.6298;
-    const lat = 41.8781;
-    const zoomScale = 10;
+      'pk.eyJ1IjoidGhpc3VuIiwiYSI6ImNrOTFvOWtuYTAyM2kza21rYWNoeXN0OHgifQ.NYX8O2aH4FFqB2qIOasIMA';
+    const styleName = 'thisun/ck9314eok2fb01ip9jylxzrpu';
+    const lon = 81.017452;
+    const lat = 7.872285;
+    const zoomScale = 7;
 
     return (
       <div className="App">
-        <Map
+        {/* <Map
+          accessToken={accessToken}
+          styleName={styleName}
+          lon={lon}
+          lat={lat}
+          zoomScale={zoomScale}
+        /> */}
+        <MarkerMap 
           accessToken={accessToken}
           styleName={styleName}
           lon={lon}

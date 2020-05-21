@@ -9,6 +9,8 @@ const SET_CHARGING_STATIONS = 'SET_CHARGING_STATIONS';
 const CHANGE_WATER_COLOR = 'CHANGE_WATER_COLOR';
 const TOGGLE_STATIONS = 'TOGGLE_STATIONS';
 const CHANGE_MARKER_SIZE = 'CHANGE_MARKER_SIZE';
+const SET_PROVINCE = 'SET_PROVINCE'
+const SET_LOCATION = 'SET_LOCATION'
 
 // ACTION CREATORS
 export const setStyle = style => ({
@@ -30,6 +32,14 @@ export const toggleStations = visibility => ({
 export const changeMarkerSize = size => ({
   type: CHANGE_MARKER_SIZE,
   size
+});
+export const displayProvince = description => ({
+  type: SET_PROVINCE,
+  description,
+});
+export const displayLocation = location => ({
+  type: SET_LOCATION,
+  location
 })
 
 // THUNK CREATOR
@@ -44,6 +54,8 @@ export const fetchAllStations = () => async dispatch => {
 const initialState = {
   style: {},
   chargingStations: [],
+  description: 'Select province',
+  location: []
 };
 
 // HANDLERS
@@ -71,12 +83,20 @@ const handlers = {
     const layer = newStyle.layers.find(layer => layer.id === 'allStations');
     layer.paint['circle-radius'] = action.size
     return {...state, style: newStyle}
-  }
+  },
+  [SET_PROVINCE]: (state, action) => {
+    return { ...state, description: action.description };
+  },
+  [SET_LOCATION]: (state, action) => {
+
+    return { ...state, location: action.location };
+  },
 };
 
 // REDUCER
 const reducer = (state = initialState, action) => {
   if (!handlers.hasOwnProperty(action.type)) {
+    console.log(state)
     return state;
   } else {
     return handlers[action.type](state, action);

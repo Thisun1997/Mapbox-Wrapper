@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mapbox/mapbox-gl-geocoder": "^4.5.1",
+    "@turf/turf": "^5.1.6",
     "axios": "^0.18.0",
     "immutable": "^3.8.2",
     "maki": "^2.1.0",
