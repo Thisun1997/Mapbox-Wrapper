@@ -4,30 +4,29 @@ import './Body.css';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@turf/turf'
-import { displayLocation,selectedLocation } from '../store/index'
+import { fetchPlaces } from '../store/index'
 
-class MarkerMap extends Component {
 
+class DisplayMap extends Component {
 
   componentDidMount() {
     const { accessToken, styleName, lon, lat, zoomScale } = this.props;
-    const { displayLocation,selectedLocation } = this.props;
+    const { getPlaces } = this.props;
     var turf = require('@turf/turf');
-    var MapboxGeocoder = require('@mapbox/mapbox-gl-geocoder')
     
-    const setLocation = location => {
-        console.log(location);
-        displayLocation(location);
-      };
-    const selectLocation = selected => {
-        console.log(selected);
-        selectedLocation(selected);
-      };
+    // const getPlaces = location => {
+    //     console.log(location);
+    //     fetchPlaces(location);
+    //   };
+    // const selectLocation = selected => {
+    //     console.log(selected);
+    //     selectedLocation(selected);
+    //   };
 
     mapboxgl.accessToken = accessToken;
 
     const map = new mapboxgl.Map({
-      container: 'markermap', // html element id in render
+      container: 'displaymap', // html element id in render
       style: `mapbox://styles/${styleName}`,
       center: [lon, lat], // note lon comes before lat - geoJSON convention
       zoom: [zoomScale],
@@ -3540,78 +3539,17 @@ class MarkerMap extends Component {
     },
     });
 
-    // on user click, extract the latitude / longitude, update our data source and display it on our map
-    map.on('click','state-fills', (clickEvent) => {
-        const lngLat = [clickEvent.lngLat.lng, clickEvent.lngLat.lat];
-        points.features.push(turf.point(lngLat));
-        map.getSource('circleData').setData(points);
-        const l = []
-        var i;
-        for(i=0;i<points.features.length;i++){
-            l.push([points.features[i].geometry.coordinates])
-            console.log(points.features[i].geometry.coordinates)
-            selectLocation([points.features[i].geometry.coordinates[0],points.features[i].geometry.coordinates[1]])
+    await getPlaces().then(() => {
+        const { places_list } = this.props;
+        var i = 0
+        for(i=0;i<places_list.length;i++){
+            points.features.push(turf.point(places_list[i]));
+            map.getSource('circleData').setData(points);
         }
     });
-        
-
-    map.on('mousemove','state-fills', (e) => {
-        setLocation([e.lngLat.lng,e.lngLat.lat])
-    });
-
     
     });
 
-    var coordinatesGeocoder = function(query) {
-        // match anything which looks like a decimal degrees coordinate pair
-        var matches = query.match(
-        /^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i
-        );
-        if (!matches) {
-        return null;
-        }
-         
-        function coordinateFeature(lng, lat) {
-          if ((lng>=79.41 & lng<=81.53) & (lat>=5.55 & lat<=9.51)){
-            return {
-              center: [lng, lat],
-              geometry: {
-                type: 'Point',
-                coordinates: [lng, lat]
-              },
-              place_name: 'Lng: ' + lng + ' Lat: ' + lat,
-              place_type: ['coordinate'],
-              properties: {},
-              type: 'Feature'
-            };
-          }
-        }
-         
-        var coord1 = Number(matches[1]);
-        var coord2 = Number(matches[2]);
-        var geocodes = [];
-
-
-        if ((coord1>=79.41 & coord1<=81.53) & (coord2>=5.55 & coord2<=9.51)){
-            geocodes.push(coordinateFeature(coord1, coord2));
-            selectLocation([coord1,coord2])
-        }
-
-        console.log(geocodes)
-         
-        return geocodes;
-        };
-         
-        map.addControl(
-            new MapboxGeocoder({
-              accessToken: mapboxgl.accessToken,
-              localGeocoder: coordinatesGeocoder,
-              localGeocoderOnly: true,
-              zoom: 7,
-              placeholder: 'enter lng,lat',
-              mapboxgl: mapboxgl
-            })
-        );
   }
 
   // componentDidUpdate(prevProps) {
@@ -3626,31 +3564,26 @@ class MarkerMap extends Component {
   // }
 
   render() {
-    return <div id="markermap" />;
+    return <div id="displaymap" />;
   }
 }
 
 const mapStateToProps = state => {
   return {
-    // style: state.style,
-    // chargingStations: state.chargingStations,
-    // description: state.description
+      places_list: state.places_list
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    // setStyle: style => dispatch(setStyle(style)),
-    // setInitialStations: () => dispatch(fetchAllStations()),
-    displayLocation: location => dispatch(displayLocation(location)),
-    selectedLocation: selected => dispatch(selectedLocation(selected)) 
+    getPlaces: () => dispatch(fetchPlaces()), 
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(MarkerMap);
+)(DisplayMap);
 
 
-//export default MarkerMap
+//export default DisplayMap

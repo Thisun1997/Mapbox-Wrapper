@@ -1,7 +1,6 @@
 import './Body.css';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { changeWaterColor, toggleStations, changeMarkerSize } from '../store/index';
 
 
 
@@ -14,6 +13,9 @@ class Sidebar extends Component{
                 <p>{this.props.description}</p>
                 <p>long: {this.props.location[0]}</p>
                 <p>lat: {this.props.location[1]}</p>
+                <p>Selected</p>
+                <p>long: {this.props.selected[0]}</p>
+                <p>long: {this.props.selected[1]}</p>
             </div>
         )
     }
@@ -125,7 +127,8 @@ const mapStateToProps = state => {
       // style: state.style,
       // chargingStations: state.chargingStations,
       description: state.description,
-      location: state.location
+      location: state.location,
+      selected: state.selected
     };
   };
 

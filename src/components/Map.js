@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import './Body.css';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import Immutable from 'immutable';
 import { displayProvince } from '../store/index';
 
 class Map extends Component {
@@ -11,7 +10,6 @@ class Map extends Component {
 
   componentDidMount() {
     const { accessToken, styleName, lon, lat, zoomScale } = this.props;
-    //const { setStyle, setInitialStations } = this.props;
     const { displayProvince } = this.props;
     var hoveredStateId = null;
 
@@ -3541,7 +3539,6 @@ class Map extends Component {
       map.on('click', 'state-fills', function(e) {
             var coordinates = e.lngLat;
             var description = e.features[0].properties.area;
-            var number = 10
             // Ensure that if the map is zoomed out such that multiple
             // copies of the feature are visible, the popup appears
             // over the copy being pointed to.
@@ -3562,17 +3559,6 @@ class Map extends Component {
     });
   }
 
-  // componentDidUpdate(prevProps) {
-  //   const currentStyle = this.props.style;
-  //   const previousStyle = prevProps.style;
-
-  //   if (this.props.style === null) return;
-
-  //   if (!Immutable.is(previousStyle, currentStyle)) {
-  //     this.map.setStyle(currentStyle);
-  //   }
-  // }
-
   render() {
     return <div id="map" />;
   }
@@ -3580,15 +3566,11 @@ class Map extends Component {
 
 const mapStateToProps = state => {
   return {
-    // style: state.style,
-    // chargingStations: state.chargingStations,
-    // description: state.description
+    
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    // setStyle: style => dispatch(setStyle(style)),
-    // setInitialStations: () => dispatch(fetchAllStations()),
     displayProvince: description => dispatch(displayProvince(description))
   };
 };

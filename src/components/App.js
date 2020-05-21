@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
-import Map from './Map';
-import MarkerMap from './MarkerMap';
+//import Map from './Map';
+//import MarkerMap from './MarkerMap';
 import Sidebar from './Sidebar';
+import DisplayMap from './DisplayMap';
 
 class App extends Component {
   render() {
@@ -22,7 +23,7 @@ class App extends Component {
           lat={lat}
           zoomScale={zoomScale}
         /> */}
-        <MarkerMap 
+        <DisplayMap 
           accessToken={accessToken}
           styleName={styleName}
           lon={lon}
