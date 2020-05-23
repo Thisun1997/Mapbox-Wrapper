@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
-//import Map from './Map';
+import Map from './Map';
 //import MarkerMap from './MarkerMap';
 import Sidebar from './Sidebar';
-import DisplayMap from './DisplayMap';
+//import DisplayMap from './DisplayMap';
 
 class App extends Component {
   render() {
@@ -16,20 +16,20 @@ class App extends Component {
 
     return (
       <div className="App">
-        {/* <Map
-          accessToken={accessToken}
-          styleName={styleName}
-          lon={lon}
-          lat={lat}
-          zoomScale={zoomScale}
-        /> */}
-        <DisplayMap 
+        <Map
           accessToken={accessToken}
           styleName={styleName}
           lon={lon}
           lat={lat}
           zoomScale={zoomScale}
         />
+        {/* <DisplayMap 
+          accessToken={accessToken}
+          styleName={styleName}
+          lon={lon}
+          lat={lat}
+          zoomScale={zoomScale}
+        /> */}
         <Sidebar />
       </div>
     );

@@ -6,6 +6,7 @@
     "@mapbox/mapbox-gl-geocoder": "^4.5.1",
     "@turf/turf": "^5.1.6",
     "axios": "^0.18.0",
+    "firebase": "^7.14.5",
     "immutable": "^3.8.2",
     "maki": "^2.1.0",
     "mapbox-gl": "^0.50.0",

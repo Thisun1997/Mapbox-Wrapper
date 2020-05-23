@@ -3539,6 +3539,25 @@ class DisplayMap extends Component {
     },
     });
 
+    map.on('click', 'data', function(e) {
+      var coordinates = e.lngLat;
+      //var description = e.features[0].properties.area;
+      // Ensure that if the map is zoomed out such that multiple
+      // copies of the feature are visible, the popup appears
+      // over the copy being pointed to.
+      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+      }
+      
+      //const code = '<div>hi</div>'; 
+      //etProvince(description);
+      new mapboxgl.Popup()
+      .setLngLat(coordinates)
+      .setHTML(coordinates)
+      .addTo(map);
+
+  });
+
     await getPlaces().then(() => {
         const { places_list } = this.props;
         var i = 0
@@ -3547,6 +3566,8 @@ class DisplayMap extends Component {
             map.getSource('circleData').setData(points);
         }
     });
+
+
     
     });
 

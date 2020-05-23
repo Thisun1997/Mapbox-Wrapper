@@ -3,14 +3,13 @@ import { connect } from 'react-redux';
 import './Body.css';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { displayProvince } from '../store/index';
+import { displayProvince, fetchUsers } from '../store/index';
 
 class Map extends Component {
 
-
   componentDidMount() {
     const { accessToken, styleName, lon, lat, zoomScale } = this.props;
-    const { displayProvince } = this.props;
+    const { displayProvince, getUsers } = this.props;
     var hoveredStateId = null;
 
     mapboxgl.accessToken = accessToken;
@@ -2256,7 +2255,7 @@ class Map extends Component {
               {
                 "type": "Feature",
                 "properties": {
-                  "area": "Nothern Province"
+                  "area": "Northern Province"
                 },
                 "geometry": {
                   "coordinates": [
@@ -3507,7 +3506,9 @@ class Map extends Component {
             ]
           }
           });
-          
+        
+        var description = ""
+        var coordinates = ""
         map.on('mousemove', 'state-fills', function(e) {
           if (e.features.length > 0) {
               if (hoveredStateId) {
@@ -3522,6 +3523,16 @@ class Map extends Component {
                   { hover: true }
               );
           }
+          coordinates = e.lngLat;
+          description = e.features[0].properties.area;
+            // Ensure that if the map is zoomed out such that multiple
+            // copies of the feature are visible, the popup appears
+            // over the copy being pointed to.
+            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            }
+
+            setProvince(description);
       });
 
       map.on('mouseleave', 'state-fills', function() {
@@ -3534,20 +3545,26 @@ class Map extends Component {
         hoveredStateId = null;
         
         });
-  
 
-      map.on('click', 'state-fills', function(e) {
-            var coordinates = e.lngLat;
-            var description = e.features[0].properties.area;
-            // Ensure that if the map is zoomed out such that multiple
-            // copies of the feature are visible, the popup appears
-            // over the copy being pointed to.
-            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-            }
-            
-            const code = '<div>'+description+'</div>'; 
-            setProvince(description);
+      // var users = await getUsers(description).then(() => {
+      //     const { no_of_users } = this.props;
+      //     return no_of_users
+      // });
+
+      map.on('click', 'state-fills', async function(e) {
+            // var coordinates = e.lngLat;
+            // var description = e.features[0].properties.area;
+            // // Ensure that if the map is zoomed out such that multiple
+            // // copies of the feature are visible, the popup appears
+            // // over the copy being pointed to.
+            // while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            //     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            // }
+
+            // setProvince(description);
+           
+            var users = await getUsers(description)
+            const code = '<div>'+description+users+'</div>'; 
             new mapboxgl.Popup()
             .setLngLat(coordinates)
             .setHTML(code)
@@ -3559,6 +3576,9 @@ class Map extends Component {
     });
   }
 
+
+  
+
   render() {
     return <div id="map" />;
   }
@@ -3566,12 +3586,14 @@ class Map extends Component {
 
 const mapStateToProps = state => {
   return {
-    
+    no_of_users: state.no_of_users
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    displayProvince: description => dispatch(displayProvince(description))
+    displayProvince: description => dispatch(displayProvince(description)),
+    getUsers: description => dispatch(fetchUsers(description)), 
+
   };
 };
 

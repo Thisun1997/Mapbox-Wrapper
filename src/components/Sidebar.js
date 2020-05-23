@@ -15,7 +15,7 @@ class Sidebar extends Component{
                 <p>lat: {this.props.location[1]}</p>
                 <p>Selected</p>
                 <p>long: {this.props.selected[0]}</p>
-                <p>long: {this.props.selected[1]}</p>
+                <p>lat: {this.props.selected[1]}</p>
             </div>
         )
     }

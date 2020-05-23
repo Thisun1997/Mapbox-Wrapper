@@ -8,6 +8,7 @@ const SET_PROVINCE = 'SET_PROVINCE'
 const SET_LOCATION = 'SET_LOCATION'
 const SET_SELECTED = 'SET_SELECTED'
 const GET_PLACES = 'GET_PLACES'
+const GET_USERS = 'GET_USERS'
 
 // ACTION CREATORS
 export const displayProvince = description => ({
@@ -26,6 +27,10 @@ export const getPlaces = places_list => ({
   type: GET_PLACES,
   places_list
 });
+export const getUsers = no_of_users => ({
+  type: GET_USERS,
+  no_of_users
+});
 
 // THUNK CREATOR
 // export const fetchAllStations = () => async dispatch => {
@@ -39,13 +44,31 @@ export const fetchPlaces = () => async dispatch => {
   dispatch(getPlaces(places_list))
 }
 
+export const fetchUsers = (description) => async dispatch => {
+  var no_of_users = ''
+  var dic = {
+    'Western Province': 'WP',
+    'North Central Province': 'NC',
+    'Southern Province':'SP',
+    'Sabaragamuwa Province':'SB',
+    'Uva Province':'UP',
+    'Central Province':'CP',
+    'North Western Province':'NW',
+    'Eastern Province':'EP',
+    'Northern Province':'NP'
+  }
+  return dic[description];
+  //console.log(no_of_users);
+   };
+
 
 // INITIAL STATE
 const initialState = {
   description: 'Select province',
   location: [],
   selected: [],
-  places_list: []
+  places_list: [],
+  no_of_users: ''
 };
 
 // HANDLERS
@@ -61,6 +84,10 @@ const handlers = {
   },
   [GET_PLACES]: (state, action) => {
     return {...state, places_list: action.places_list}
+  },
+  [GET_USERS]: (state, action) => {
+    console.log(action.no_of_users)
+    return {...state, no_of_users: action.no_of_users}
   }
 };
 
