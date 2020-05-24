@@ -2,9 +2,6 @@ import './Body.css';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-
-
-
 class Sidebar extends Component{
 
     render(){

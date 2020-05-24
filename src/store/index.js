@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import loggingMiddleware from 'redux-logger';
+import  { db }  from '../firebase';
 //import axios from 'axios';
 
 // ACTION TYPES
@@ -45,7 +46,6 @@ export const fetchPlaces = () => async dispatch => {
 }
 
 export const fetchUsers = (description) => async dispatch => {
-  var no_of_users = ''
   var dic = {
     'Western Province': 'WP',
     'North Central Province': 'NC',
@@ -57,8 +57,24 @@ export const fetchUsers = (description) => async dispatch => {
     'Eastern Province':'EP',
     'Northern Province':'NP'
   }
-  return dic[description];
-  //console.log(no_of_users);
+  var province = dic[description];
+  const no_of_users = await db.collection('locations').doc(province).get()
+        .then(doc => {
+            if (doc.data() === undefined) {
+                console.log('No matching documents.');
+                return 0
+            } 
+            else{
+                var user_tokens = doc.data().available_users
+                return user_tokens.length;
+            }
+        })
+        .catch(err => {
+            console.log('Error getting documents', err);
+    })
+  //return dic[description];
+  console.log(no_of_users);
+  return no_of_users;
    };
 
 

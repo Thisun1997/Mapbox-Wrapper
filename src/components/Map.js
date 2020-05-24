@@ -3564,7 +3564,7 @@ class Map extends Component {
             // setProvince(description);
            
             var users = await getUsers(description)
-            const code = '<div>'+description+users+'</div>'; 
+            const code = '<div>'+description+'</div><div>Number of current users: '+users+'</div>'; 
             new mapboxgl.Popup()
             .setLngLat(coordinates)
             .setHTML(code)
